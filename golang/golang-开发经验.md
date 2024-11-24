@@ -125,3 +125,57 @@ package cag-wx-proxy
 **golang pb 协议如何定义返回错误码和错误信息** 
 
 [https://jiajunhuang.com/articles/2022_11_04-grpc_error_handling.md.html](https://jiajunhuang.com/articles/2022_11_04-grpc_error_handling.md.html)
+
+
+# window go mod  权限问题
+
+安装后，配置在  c:\Program Files 下， go mod tidy  在下载库时，用户没有权限会报错误如下：
+
+  ```cmd
+go: writing go.mod cache: mkdir c:\Program Files\Go\pkg\mod\cache: Access is denied.
+go: writing go.mod cache: mkdir c:\Program Files\Go\pkg\mod\cache: Access is denied.
+
+```
+
+对  c:\Program Files\Go 添加当前用户的读写和执行权限
+
+# 对 map 的 value 进行类型转换
+
+
+```go
+	Config1 := mapConf["game"].(map[string]interface{}) // 有问题
+	for key, value := range confMap {
+		Config1[key] = value
+	}
+```
+mapConf["game"]为nil：如果mapConf["game"]是 nil，那么在尝试进行类型断言时也会导致 panic。
+
+改成：
+
+```go
+    Config1 := make(map[string]interface{})
+	for key, value := range confMap {
+		Config1[key] = value
+	}
+	mapConf["game"] = Config1
+```
+
+**错误：invalid version: git ls-remote -q origin in**
+
+```
+internal\logic\checkPhoneCaptchaLogic.go:16:2: gitlab.vrviu.com/cloud_esport_backend/saas_user_server@v0.0.0-20240524031850-03bf96fbcf45: invalid version: git ls-remote -q origin in C:\Users\kane\go\pkg\mod\cache\vcs\b6d3346b9a08a643b6538f20717fbbcf2a9651f4d8a8922abe6346170ec83489: exit status 128:
+        warning: missing OAuth configuration for gitlab.vrviu.com - see https://aka.ms/gcm/gitlab for more information
+        fatal: Cannot prompt because user interactivity has been disabled.
+        fatal: could not read Username for 'https://gitlab.vrviu.com': terminal prompts disabled
+Confirm the import path was entered correctly.
+```
+
+![](./assets/go-2024-10-02_16-11-34.jpg)
+
+在 git 的全局配置中加下面的配置 
+```
+[url "https://github"]
+	insteadOf = git://github
+[url "git@gitlab.vrviu.com:"]
+        insteadOf = https://gitlab.vrviu.com/   
+```

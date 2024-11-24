@@ -53,6 +53,52 @@ export GOPRIVATE=git.mycompany.com,github.com/my/private
  - GOPATH：若干工作区目录的路径。是我们自己定义的工作空间。
  - GOBIN：golang  程序生成的可执行文件（executable file）的路径。
 
+
+工具环境的变量：
+
+```sh
+set GO111MODULE=on
+set GOARCH=amd64
+set GOBIN=c:\Program Files\Go\bin
+set GOCACHE=C:\Users\14476\AppData\Local\go-build
+set GOENV=C:\Users\14476\AppData\Roaming\go\env
+set GOEXE=.exe
+set GOEXPERIMENT=
+set GOFLAGS=
+set GOHOSTARCH=amd64
+set GOHOSTOS=windows
+set GOINSECURE=
+set GOMODCACHE=C:\go\pkg\mod
+set GONOPROXY=gitlab.vrviu.com
+set GONOSUMDB=gitlab.vrviu.com
+set GOOS=windows
+set GOPATH=C:\go
+set GOPRIVATE=gitlab.vrviu.com
+set GOPROXY=https://goproxy.cn,direct
+set GOROOT=C:\Program Files\Go
+set GOSUMDB=sum.golang.org
+set GOTMPDIR=
+set GOTOOLCHAIN=auto
+set GOTOOLDIR=C:\Program Files\Go\pkg\tool\windows_amd64
+set GOVCS=
+set GOVERSION=go1.22.4
+set GCCGO=gccgo
+set GOAMD64=v1
+set AR=ar
+set CC=gcc
+set CXX=g++
+set CGO_ENABLED=0
+set GOMOD=c:\kane-fang\work\gitlab\cag\cag-proxy\go.mod
+set GOWORK=
+set CGO_CFLAGS=-O2 -g
+set CGO_CPPFLAGS=
+set CGO_CXXFLAGS=-O2 -g
+set CGO_FFLAGS=-O2 -g
+set CGO_LDFLAGS=-O2 -g
+set PKG_CONFIG=pkg-config
+set GOGCCFLAGS=-m64 -fno-caret-diagnostics -Qunused-arguments -Wl,--no-gc-sections -fmessage-length=0 -ffile-prefix-map=C:\Users\14476\AppData\Local\Temp\go-build3170561865=/tmp/go-build -gno-record-gcc-switches
+```
+
 ## golang 源码的组织方式
 
 golang  语言源码的组织方式就是以环境变量 GOPATH、工作区、src 目录和代码包为主线的。一般情况下，golang 语言的源码文件都需要被存放在环境变量 GOPATH 包含的某个工作区（目录）中的 src 目录下的某个代码包（目录）中。
@@ -147,6 +193,12 @@ The commands are:
 go get  gitlab.vrviu.com/diskless_stack/instance_service/types@分支名
 ```
 
+## go toolchain
+
+
+https://before80.github.io/go_docs/docs/GoToolchains/
+
+golang 为什么会自动改 go.mod go 版本？
 ## 远程 import 支持
 
 Go 语言不仅允许我们导入本地包，还支持在语言级别调用远程的包。
@@ -167,6 +219,21 @@ import (
 go get github.com/myteam/exp/crc32
 ```
 
+##  引用本地包 
+
+https://www.liwenzhou.com/posts/Go/import-local-package/
+
+两个包，`moduledemo`和`mypackage`，其中`moduledemo`包中会导入`mypackage`。两个包在不同的项目中，且 `mypackage` 是本地包，如何引用本包？ 方法如下：
+在 `moduledemo` 的  `go.mod` 中：
+```
+module moduledemo
+
+go 1.14
+
+require "mypackage" v0.0.0
+replace "mypackage" => "../mypackage"
+
+```
 ##  vscode golang 
 
 安装 Go 插件依赖工具
@@ -2131,6 +2198,10 @@ func LookupHost(name string) (cname string, addrs []string, err error);
 
 golang 语言标准库内建提供了net/http包，涵盖了HTTP客户端和服务端的具体实现。使用 `net/http` 包，我们可以很方便地编写 HTTP 客户端或服务端的程序。
 
+HTTP Header请求头以键值对的形式显示。根据HTTP标准，Header的键是大小写不敏感的。
+当使用 HTTP 触发器调用标准运行时，在转换HTTP Header时，会基于Golang的net/http标准库，将HTTP请求Header的键进行规范化。
+规范化的原则是将键的首字母和任何连字符后的字母转成大写，其余字母转换为小写。例如，"accept-encoding" 规范化后是 "Accept-Encoding"。
+
 ### HTTP 客户端
 
 golang 内置的 `net/http` 包提供了最简洁的 HTTP 客户端实现，我们无需借助第三方网络通信库 (比如 libcurl )就可以直接使用 HTTP 中用得最多的 GET 和 POST 方式请求数据。
@@ -2485,6 +2556,7 @@ func Test_GetUnlimitedQRCode_1(t *testing.T) {
 ```sh
 go test -v  # 输出完整的过程
 go test -v -run Test_GetUserNumber # 指定测试用例的方法
+>go test -run Test_GetWxQrCode -v 
  go test -list .  #有那一些测试用例
 ```
 
@@ -2497,6 +2569,66 @@ grpc 测试工具 `grpcurl ` , 地址：https://github.com/fullstorydev/grpcurl
 ```
 go install github.com/fullstorydev/grpcurl/cmd/grpcurl@latest
 ```
+
+
+# golang jwt 
+
+JWT 就是一种基于Token的轻量级认证模式，服务端认证通过后，会生成一个JSON对象，经过签名后得到一个Token（令牌）再发回给用户，用户后续请求只需要带上这个Token，服务端解密之后就能获取该用户的相关信息了。s
+
+```go
+github.com/dgrijalva/jwt-go 
+```
+
+**基于 jwt 生成  token**
+
+```go
+func GetJwtToken(sysUser *dal.TNikaUserInfo, AccessExpire int64, AccessSecret string) (string, error) {
+	iat := time.Now().Unix()
+	claims := make(jwt.MapClaims)
+	claims["exp"] = iat + AccessExpire
+	claims["iat"] = iat
+	claims[types.NikaJwtUid] = sysUser.Id
+
+	token := jwt.New(jwt.SigningMethodHS256)
+	token.Claims = claims
+	return token.SignedString([]byte(AccessSecret))
+}
+```
+
+
+**基于 jwt 解析 token** 
+
+```go
+
+func ParseToken(ctx context.Context, requestId string, r *http.Request, config *config.Config) bool {
+	authorization := r.Header.Get("Authorization")
+
+	//解析token
+	token, err := jwt.ParseWithClaims(authorization, &jwt.MapClaims{}, func(token *jwt.Token) (i interface{}, err error) {
+		return []byte(config.JwtAuth.AccessSecret), nil
+
+	})
+	if err != nil {
+		logx.WithContext(ctx).Errorf("[%s] ParseWithClaims authorization[%s] err:%+v", requestId, authorization, err)
+		return false
+	}
+
+	claims, ok := token.Claims.(*jwt.MapClaims)
+	if !ok || !token.Valid {
+		logx.WithContext(ctx).Errorf("[%s] token.Claims Valid err authorization[%s] token:%+v", requestId, authorization, token)
+		return false
+	}
+
+	logx.WithContext(ctx).Infof("[%s] CheckAuth authorization[%s]  claims:%+v", requestId, authorization, claims)
+	userId := int64((*claims)[types.NikaJwtUid].(float64))
+	r.Header.Set(types.NikaJwtUid, fmt.Sprintf("%d", userId))
+	return true
+}
+
+```
+
+
+
 
 # 其他
 
@@ -2511,6 +2643,57 @@ Go 程序的代码注释与 C++ 保持一致，即同时支持以下两种用法
 ```
 
 ---
+
+## 链接符号
+
+
+链接符号关心的是如何将语言文法使用的符号转化为链接期使用的符号，在常规情况下，链 接期使用的符号对我们不可见.
+
+C++ 支持函数重载，故此语言的“链接符号”构成极其复杂，需要包括
+
+- 命令空间 `Namespace`
+- 类 `ClassType`
+- 方法 `Method`
+- 参数 `ArgType1, ArgType2,...`
+
+不同编译器厂商生成“链接符号” 的规则并不统一，生成的二进制模块(.o 或 .so)是不兼容的。因此多数情况下，C++ 语言的模块间交互使用 C 的机制， 而不是自身的机制。
+
+Go 语言中，一般化的函数原型如下：   
+
+```go 
+package Package
+func Method(arg1 ArgType1, arg2 ArgType2, ...) (ret1 RetType1, ret2 RetType2, ...)
+func (v ClassType) Method(arg1 ArgType1, arg2 ArgType2, ...) (ret1 RetType1, ret2 RetType2, ...)
+func (this *ClassType) Method(arg1 ArgType1, arg2 ArgType2, ...) (ret1 RetType1, ret2 RetType2, ...) 
+// 这种可以认为是上一种情况的特例
+```
+
+由于 Go 语言并无重载，故此语言的“链接符号”由如下信息构成:
+
+- Package Package 名可以是多层，例如 `A/B/C`。
+- ClassType  很特别的是，Go 语言中 `ClassType` 可以是指针，也可以不是。
+- Method 
+
+其“链接符号”的组成规则如下:
+
+- `Package.Method`
+- `Package.ClassType·Method`
+
+举个例子,假设在 `qbox.us/mockfs` 模块中。
+
+```go 
+func New(cfg Config) *MockFS
+func (fs *MockFS) Mkdir(dir string) (code int, err error) 
+func (fs MockFS) Foo(bar Bar)
+```
+
+它们的链接符号分别为:
+
+```text
+qbox.us/mockfs.New
+qbox.us/mockfs.*MockFS·Mkdir
+qbox.us/mockfs.MockFS·Foo
+```
 
 
 

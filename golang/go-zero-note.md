@@ -91,17 +91,15 @@ goctl api go  -dir . -style goZero  -api user.api
 goctl rpc protoc cag-wx-proxy.proto  --go_out=. --go-grpc_out=. --zrpc_out=. -style goZero
 ```
 
+go-zore 配置 prometheus 
 
+https://go-zero.dev/docs/tutorials/go-zero/configuration/prometheus
 
-
-
+https://juejin.cn/post/7044509187027501063
 
 # go-zore 开发经验
 
 ## RPC 
-
-  
-
 
 
 rpc 的 Etcd 配置
@@ -177,3 +175,116 @@ export CGO_ENABLED=0
 ```sh 
 2024-01-03T14:56:10.564+08:00    error  [flow_id-1234567890] wx.GetWebAccessToken err : Get "https://api.weixin.qq.com/sns/oauth2/access_token?appid=wx44217ca4482c833d&code=0611Xb1w340iZ13cPb4w35iH8P01Xb1A&grant_type=authorization_code&secret=7c6526d8a80081dbe7d4bdcbda6eb420": tls: failed to verify certificate: x509: certificate signed by unknown authority    caller=logic/geWxUserInfoLogic.go:31
 ```
+
+## go-zore 日志输出
+
+go-zore 日志输出方式体验让我有一些不适。 
+
+今天还遇到一个现象，日志输出如下：
+
+```sh
+{"@timestamp":"2024-03-09T15:48:08.026+08","caller":"server/Helper.go:164","content":"httpc.Do err userId[512] host[http://127.0.0.1:8888/xxxxx/xxxxxxList?offset=0\u0026limit=10\u0026order=desc\u0026sortby=create_time\u0026state=-1\u0026states=0,1,2,3,4\u0026biz_id=0\u0026agent_id=512]","level":"error","span":"66a2ba1882458680","trace":"c94c9ac8179690d592fc348b40666e16"}
+
+```
+
+出一些  `\u0026` 之类的。 但如果把 Encoding 设置为 plain，则正常。 
+
+```sh 
+2024-03-09T15:47:08.006+08       error  httpc.Do err userId[512] host[http://127.0.0.1:8888/xxxxx/xxxxxxList?offset=0&limit=10&order=desc&sortby=create_time&state=-1&states=0,1,2,3,4&biz_id=0&agent_id=512]      caller=server/Helper.go:164        trace=ca5e1ad81e7d0528f38b361c63a75f35  span=48b14f5d8bce91e9
+```
+
+## httpc.Do post 数据因 struct 继承导致的失败
+
+工作时遇到的一个问题。
+
+背景大概可以简化为：请求不同服务过来的数据后做聚合，然后转发另一个服务。 
+
+对于数据的处理习惯性就是：
+
+```go 
+
+// data from server A 
+type BaseB struct {
+	Offset int64 `json:"offset"`
+	Limit  int64 `json:"limit"`
+}
+
+// data from server B 
+type BaseB struct {
+	Id    int64 `json:"id"`
+    Name string `json:"name"`
+	  
+}
+
+// send to server C
+type BaseC  struct {
+	BaseA
+	BaseB
+    Addr  string `json:"addr"`
+}
+
+baseC := new(BaseC)
+baseC.Offset = 199
+baseC.Id = 1
+baseC.Name = "kane"
+baseC.Addr = "guangdong"
+fmt.Printf("baseC ----- > %+v\n", baseC)
+
+```
+
+这里对 BaseC 成员变量的操作和它继承的BaseB、BaseB 的成员一样，都按 BaseC的成员一样处理。 
+
+但是，在 fmt.Printf baseC 时，baseC 的结构却有点和想像中不一样。而是：
+
+```sh 
+ baseC ----- > &{BaseA:{Offset:199 Limit:0} BaseB:{Id:1 Name:kane} Addr:guangdong}
+```
+中包含了 "BaseA" "BaseB"。 
+
+多想一步，把这个结构体转 json 输出，如下：
+
+```sh
+baseCByte ----- > {"offset":199,"limit":0,"id":1,"name":"kane","addr":"guangdong"}
+```
+
+想像上面 baseC 数据的结构应该是这样的。但事实却不一样。 
+
+自己 golang 的底层知识不够导致的。 
+
+go-zore 的  `httpc.Do()`在 post 数据带上设置头信息时，[https://go-zero.dev/docs/tutorials/http/client/index](https://go-zero.dev/docs/tutorials/http/client/index)
+
+```go
+func main() {
+    flag.Parse()
+
+    req := Request{
+        Node:   "foo",
+        Header: "foo-header",
+        Foo: "foo",
+        Bar: "bar",
+    }
+    resp, err := httpc.Do(context.Background(), http.MethodPost, *domain+"/nodes/:node", req)
+    if err != nil {
+        fmt.Println(err)
+        return
+    }
+
+    io.Copy(os.Stdout, resp.Body)
+}
+```
+当  `Request` 用了继承的方式：
+如：
+
+```go
+type Body struct {
+    Foo    string `json:"foo"`
+    Bar    string `json:"bar"`
+}
+    
+type Request struct {
+    Body
+    Header string `header:"X-Header"`
+}
+```
+
+发送过去之后， Body 成了空的。估计就是继承无法正确解析的原因。 
