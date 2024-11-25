@@ -15,7 +15,7 @@ argocd : [https://argocd.devops.gold/](https://argocd.devops.gold/)
 
 ## devlop 
 
-golang 开发备忘:[https://blog.xyecho.com/golang-note/](https://blog.xyecho.com/golang-note/)
+golang 开发备忘:[https://github.com/kakabei/k-note/blob/master/golang/golang-%E5%9F%BA%E7%A1%80.md](https://github.com/kakabei/k-note/blob/master/golang/golang-%E5%9F%BA%E7%A1%80.md)
 
 golang play: [https://go.dev/play/](https://go.dev/play/)
 
