@@ -9,9 +9,10 @@
 
 Rust 程序设计语言 :[https://rust.bootcss.com/](https://rust.bootcss.com/)
 
+harmonyos:   [https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/application-dev-guide-V5](https://developer.huawei.com/consumer/cn/doc/harmonyos-guides-V5/application-dev-guide-V5)
+
 kubernetes  中文文档：[ https://www.kubernetes.org.cn/doc-11](https://www.kubernetes.org.cn/doc-11)
 
-argocd : [https://argocd.devops.gold/](https://argocd.devops.gold/)
 
 ## devlop 
 
@@ -72,9 +73,15 @@ poe : [https://poe.com/chats](https://poe.com/chats)
 
 openAI :[https://chat.openai.com](https://chat.openai.com/)
 
+bolt.new : [https://bolt.new/](https://bolt.new/)
+
 # system 
 
 强大的混沌工程平台 : [https://chaos-mesh.org/website-zh/?continueFlag=d5490667caa63d66b43697894ac52925](https://chaos-mesh.org/website-zh/?continueFlag=d5490667caa63d66b43697894ac52925)
+
+# other 
+
+argocd : [https://argocd.devops.gold/](https://argocd.devops.gold/)
 
 
 ## github  
