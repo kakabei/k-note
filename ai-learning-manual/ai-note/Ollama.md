@@ -37,7 +37,9 @@ Flags:
 # ollama 安装与配置 - Windows 系统篇
 
 > Ollama 下载：https://ollama.com/download
+>
 > Ollama 官方主页：https://ollama.com
+>
 > Ollama 官方 GitHub 源代码仓库：https://github.com/ollama/ollama
 
 下载后直接安装。 
