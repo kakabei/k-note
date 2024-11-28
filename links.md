@@ -75,6 +75,8 @@ openAI :[https://chat.openai.com](https://chat.openai.com/)
 
 bolt.new : [https://bolt.new/](https://bolt.new/)
 
+Qwen2.5-Coder : [https://github.com/QwenLM/Qwen2.5-Coder?tab=readme-ov-file](https://github.com/QwenLM/Qwen2.5-Coder?tab=readme-ov-file)
+
 # system 
 
 强大的混沌工程平台 : [https://chaos-mesh.org/website-zh/?continueFlag=d5490667caa63d66b43697894ac52925](https://chaos-mesh.org/website-zh/?continueFlag=d5490667caa63d66b43697894ac52925)
