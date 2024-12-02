@@ -65,3 +65,24 @@ curl --location --request POST 'http://127.0.0.1:36012/v1/service/wx/getwxuserin
 }
 
 ```
+
+## 公众号关注二维码扫描事件
+
+文档：[https://developers.weixin.qq.com/doc/offiaccount/Account_Management/Generating_a_Parametric_QR_Code.html](https://developers.weixin.qq.com/doc/offiaccount/Account_Management/Generating_a_Parametric_QR_Code.html)
+
+生成带参数的二维码, 当用户扫码或关注公众号之后，微信公众号平台会回调我们的服务
+
+## 消息回调
+
+文档：[https://developers.weixin.qq.com/doc/offiaccount/Message_Management/Receiving_event_pushes.html](https://developers.weixin.qq.com/doc/offiaccount/Message_Management/Receiving_event_pushes.html)
+
+服务需要两个接口，一个用于微信公众号平台设置回调接口时，验证服务器有效性，一个用于接收消息。
+
+GET 用于设置回调接口时，验证服务器有效性
+POST  用于接收消息  
+
+```sh
+curl --location --request POST 'http://127.0.0.1:36012/v1/service/wx/wxmsg'
+
+curl  --location --request GET  'http://127.0.0.1:36012/v1/service/wx/wxmsg'  
+```
