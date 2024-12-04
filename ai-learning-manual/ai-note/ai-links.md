@@ -1,7 +1,5 @@
 
-
-
-# AI 
+# AI
 
 通往 AGI 之路: [https://waytoagi.feishu.cn/wiki/QPe5w5g7UisbEkkow8XcDmOpn8e?](https://waytoagi.feishu.cn/wiki/QPe5w5g7UisbEkkow8XcDmOpn8e?)
 
@@ -25,4 +23,7 @@ openAI :[https://chat.openai.com](https://chat.openai.com/)
 
 bolt.new : [https://bolt.new/](https://bolt.new/)
 
+v0.dev: [https://v0.dev/](https://v0.dev/)
+
+llama.cpp
 Qwen2.5-Coder : [https://github.com/QwenLM/Qwen2.5-Coder?tab=readme-ov-file](https://github.com/QwenLM/Qwen2.5-Coder?tab=readme-ov-file)

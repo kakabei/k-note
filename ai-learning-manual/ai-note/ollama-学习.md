@@ -1,7 +1,7 @@
 
 # ollama 资料
 
-1、使用Ollama+OpenWebUI本地部署Gemma谷歌AI开放大模型完整指南:[https://cloud.tencent.com/developer/article/2425136](https://cloud.tencent.com/developer/article/2425136) 
+1、使用Ollama+OpenWebUI本地部署Gemma谷歌AI开放大模型完整指南:[https://cloud.tencent.com/developer/article/2425136](https://cloud.tencent.com/developer/article/2425136)
 
 2、动手学习 ollama [https://github.com/datawhalechina/handy-ollama/tree/main](https://github.com/datawhalechina/handy-ollama/tree/main)
 
@@ -36,15 +36,15 @@ Flags:
 
 # ollama 安装与配置 - Windows 系统篇
 
-> Ollama 下载：https://ollama.com/download
+> ollama 下载：<https://ollama.com/download>
 >
-> Ollama 官方主页：https://ollama.com
+> ollama 官方主页：<https://ollama.com>
 >
-> Ollama 官方 GitHub 源代码仓库：https://github.com/ollama/ollama
+> ollama 官方 GitHub 源代码仓库：<https://github.com/ollama/ollama>
 
-下载后直接安装。 
+下载后直接安装。
 
-环境变量配置： 
+环境变量配置：
 
 | 参数                     | 标识与配置                                                                                                                                                                                                                          |
 | ------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -56,12 +56,10 @@ Flags:
 | OLLAMA_NUM_PARALLEL      | 表示请求处理的并发数量，默认为**1** （即单并发串行处理请求）<br />建议按照实际需求进行调整                                                                                                                                   |
 | OLLAMA_MAX_QUEUE         | 表示请求队列长度，默认值为**512** <br />建议按照实际需求进行调整，超过队列长度的请求会被抛弃                                                                                                                                  |
 | OLLAMA_DEBUG             | 表示输出 Debug 日志，应用研发阶段可以设置成**1** （即输出详细日志信息，便于排查问题）                                                                                                                                        |
-| OLLAMA_MAX_LOADED_MODELS | 表示最多同时加载到内存中模型的数量，默认为**1** （即只能有 1 个模型在内存中）     
-
+| OLLAMA_MAX_LOADED_MODELS | 表示最多同时加载到内存中模型的数量，默认为**1** （即只能有 1 个模型在内存中）
 
 启动服务， 要在管理员模式下启动。
 
 ```shell
 ollama serve
-``` 
-
+```
