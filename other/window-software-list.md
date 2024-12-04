@@ -1,5 +1,5 @@
 
-# window 操作系统 开发用到的软件列表
+# window software list
 
 - Listary
 - Snipaste
@@ -30,7 +30,7 @@
 - clink  [https://github.com/chrisant996/clink/releases](https://github.com/chrisant996/clink/releases)
 - excalidraw ob插件： [https://github.com/korbinzhao/excalidraw-cn](https://github.com/korbinzhao/excalidraw-cn)
 
-# 其他说明
+# other
 
 字体：Cascadia Code
 
