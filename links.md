@@ -45,6 +45,7 @@ SecureCRT_7.0.0_x64 : [https://pan.baidu.com/s/1RtDaJcManDyYhLpUaWcjxg?pwd=acdh]
 Beyond Compare V4 :[https://www.beyondcomparepro.com/download](https://www.beyondcomparepro.com/download)
 
 
+
 ## SecureCRT
 
 Secure CRT 使用教程：[https://www.bilibili.com/video/BV1zK411q7xu?p=1](https://www.bilibili.com/video/BV1zK411q7xu?p=1)
@@ -89,6 +90,8 @@ MP3 剪切: [https://mp3cut.net/cn/](https://mp3cut.net/cn/)
 图片压缩工具：[https://saerasoft.com/caesium/#downloads](https://saerasoft.com/caesium/#downloads)
 
 声音生成 AI elevnelabs :[https://elevenlabs.io](https://elevenlabs.io/)
+
+文字转语音工具：[https://tts.ciallo.de/](https://tts.ciallo.de/)
 
 ## blog
 
